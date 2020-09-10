@@ -4,11 +4,9 @@
 // `nodeIntegration` is turned off. Use `preload.js` to
 // selectively enable features needed in the rendering
 // process.
-var awsCli = require('aws-cli-js');
-var Options = awsCli.Options;
-var Aws = awsCli.Aws;
-var options = new Options();
-var aws = new Aws(options);
+
+var AWS = require('aws-sdk');
+var s3 = new AWS.S3();
 
 
 const {ipcRenderer, shell} = require('electron');
@@ -19,11 +17,11 @@ closeApp.addEventListener('click', () => {
 
 function updateGame(){
     document.getElementById("cover").style.display = "block";
-    aws.command(' s3 sync s3://mdcygopro/game . --no-sign-request', function (err, data) {
-        document.getElementById("cover").style.display = "none";
+    document.getElementById("cover").style.display = "none";
+    aws.command('s3 sync s3://mdcygopro/game . --no-sign-request', function (err, data) {
         if(err){
             console.log(err)
-            alert('Error al actualizar, intenta nuevameente')
+            alert('Error al actualizar, intenta nuevameente', JSON.stringify(err))
         }else{
             console.log('data = ', JSON.stringify(data.raw));
             alert('Actualizado correctamente')
@@ -33,8 +31,7 @@ function updateGame(){
 
 
 function openGame() {
-    var execFile = require('child_process').execFile,
-        child;
+    var execFile = require('child_process').execFile, child;
 
     child = execFile("ygopro.exe",
         function (error, stdout, stderr) {
@@ -48,8 +45,7 @@ function openGame() {
             ipcRenderer.send('close-me')
         });
     child.on('exit', function (code) {
-        console.log('Child process exited ' +
-            'with exit code ' + code);
+        console.log('Child process exited ' + 'with exit code ' + code);
     });
 }
 
