@@ -11,24 +11,26 @@ var options = new Options();
 var aws = new Aws(options);
 
 
-const {ipcRenderer} = require('electron');
+const {ipcRenderer, shell} = require('electron');
 const closeApp = document.getElementById('closeApp');
 closeApp.addEventListener('click', () => {
     ipcRenderer.send('close-me')
 });
 
-function downloadGame(){
+function updateGame(){
+    document.getElementById("cover").style.display = "block";
     aws.command(' s3 sync s3://mdcygopro/game . --no-sign-request', function (err, data) {
+        document.getElementById("cover").style.display = "none";
         if(err){
             console.log(err)
+            alert('Error al actualizar, intenta nuevameente')
         }else{
             console.log('data = ', JSON.stringify(data.raw));
-            openGame();
+            alert('Actualizado correctamente')
         }
     });
 }
 
-downloadGame();
 
 function openGame() {
     var execFile = require('child_process').execFile,
@@ -49,4 +51,8 @@ function openGame() {
         console.log('Child process exited ' +
             'with exit code ' + code);
     });
+}
+
+function openUrl(url){
+    shell.openExternal(url)
 }

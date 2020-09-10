@@ -3,6 +3,50 @@ body {
     color: #ffffff;
     font-family: sans-serif
 }
-#closeApp {
+/* #closeApp {
     display: none;
+} */
+
+#cover{
+    height: 70%;
+    width: 98%;
+    padding-top: 20px;
+    background: rgba(0,0,0,.7);
+    position: absolute;
+    top:0;
+    display: none;
+}
+
+.footer{
+    width: 100%;
+    height: auto;
+    /* background: red; */
+    margin-top: 20px;
+}
+.social-icon {
+    height: 48px;
+    cursor: pointer;
+    margin: 0 10px;
+}
+
+.myButton {
+	background:linear-gradient(to bottom, #f80000 5%, #c3050f 100%);
+	background-color:#f80000;
+	border-radius:4px;
+	border:1px solid #c3050f;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:16px;
+	padding:16px 31px;
+	text-decoration:none;
+}
+.myButton:hover {
+	background:linear-gradient(to bottom, #c3050f 5%, #f80000 100%);
+	background-color:#c3050f;
+}
+.myButton:active {
+	position:relative;
+	top:1px;
 }

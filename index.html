@@ -10,9 +10,22 @@
     <title>Mundo de Clanes</title>
   </head>
   <body>
+    <div id="cover">
+      <center>
+        <h2>Actualizando, por favor espera</h2>
+        <img src="assets/ajax-loader.gif">
+      </center>
+    </div>
     <center>
       <img src="assets/logo.png">
-      <h1 style="color:white;">Por favor espera mientras el juego se actualiza</h1>
+      <h2 style="color:white;">Por favor seleccionar una acción</h2>
+      <button class="myButton" onclick="openGame()">Abrir</button>
+      <button class="myButton" onclick="updateGame()">Actualizar</button>
+      <button class="myButton" id="closeApp">Cerrar</button>
+      <div class="footer">
+        <img onclick="openUrl('https://discord.gg/ugqzHge')" class="social-icon" src="assets/discord.png">
+        <img onclick="openUrl('https://www.facebook.com/Mundo-de-clanes-107991001014530')" class="social-icon" src="assets/fb.png">
+      </div>
     </center>
     <!-- We are using Node.js <span id="node-version"></span>,
     Chromium <span id="chrome-version"></span>,
@@ -20,7 +33,7 @@
 
     <!-- You can also require other files to run in this process -->
     <!-- <button onclick="openGame()">Abrir juego</button> -->
-    <button id="closeApp">Close</button>
+    <!-- <button id="closeApp">Close</button> -->
     <!-- <button onclick="downloadGame()">Download</button> -->
     <script src="./renderer.js"></script>
   </body>
