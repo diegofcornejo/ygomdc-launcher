@@ -34,7 +34,7 @@ function openGame() {
     var execFile = require('child_process').execFile,
         child;
 
-    child = execFile("game/ygopro.exe",
+    child = execFile("ygopro.exe",
         function (error, stdout, stderr) {
             if (error) {
                 console.log(error.stack);
