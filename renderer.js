@@ -23,9 +23,9 @@ async function isOutdated(){
     return new Promise(function (resolve, reject) { 
         axios.get("http://legyonx.ubisuite.com/launcher/info.json")
         .then((res) => {
-            console.log(res)
             if(res.status == 200){
-                console.log(res.data.version);
+                // console.log(version)
+                // console.log(res.data.version);
                 if (res.data.version === version) {
                     toastr.success('Versión: '+version, 'Tienes la última versión')
                     resolve({"code":false,"version":version})
