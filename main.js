@@ -11,7 +11,7 @@ ipcMain.on('close-me', (evt, arg) => {
 function createWindow () {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 800,
+    width: 500,
     height: 700,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
@@ -23,7 +23,7 @@ function createWindow () {
   mainWindow.loadFile('index.html')
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools()
+  // mainWindow.webContents.openDevTools()
 }
 
 // This method will be called when Electron has finished

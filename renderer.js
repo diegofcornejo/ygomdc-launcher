@@ -26,13 +26,9 @@ async function updateGame(){
             secure: false
         })
         client.trackProgress(info => {
-            // console.log("File", info.name)
-            // console.log("Type", info.type)
-            // console.log("Transferred", info.bytes)
-            // console.log("Transferred Overall", info.bytesOverall)
             document.getElementById("file").innerHTML = info.name
-            document.getElementById("transferred").innerHTML = info.bytes * 1024 * 1024 + "MB"
-            document.getElementById("transferedOverAll").innerHTML = info.bytesOverall * 1024 * 1024 + "MB"
+            document.getElementById("transferred").innerHTML = info.bytes / 1024 / 1024 + "MB"
+            document.getElementById("transferedOverAll").innerHTML = info.bytesOverall / 1024 / 1024 + "MB"
         })
         await client.downloadToDir(".", "files")
         alert('Actualizado correctamente')
@@ -42,7 +38,7 @@ async function updateGame(){
         alert('Error al actualizar:', err)
     }
     client.close()
-    document.getElementById("cover").style.display = "block";
+    document.getElementById("cover").style.display = "none";
 }
 
 
