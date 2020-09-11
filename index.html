@@ -3,10 +3,12 @@
   <head>
     <meta charset="UTF-8">
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline';">
-    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; connect-src *; img-src * 'self' data: https:;">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; connect-src *; img-src * 'self' data: https:;">
     <link rel='icon' href='favicon.ico' type='image/x-icon'/ >
     <link rel="stylesheet" href="style.css">
+    <link href="vendors/toastr.min.css" rel="stylesheet"/>
+    <script src="vendors/toastr.min.js"></script>
     <title>Mundo de Clanes</title>
   </head>
   <body>
@@ -29,15 +31,18 @@
         <img onclick="openUrl('https://discord.gg/ugqzHge')" class="social-icon" src="assets/discord.png">
         <img onclick="openUrl('https://www.facebook.com/Mundo-de-clanes-107991001014530')" class="social-icon" src="assets/fb.png">
       </div>
+      <br>
+      <p id="version"></p>
     </center>
     <!-- We are using Node.js <span id="node-version"></span>,
-    Chromium <span id="chrome-version"></span>,
-    and Electron <span id="electron-version"></span>. -->
-
-    <!-- You can also require other files to run in this process -->
-    <!-- <button onclick="openGame()">Abrir juego</button> -->
-    <!-- <button id="closeApp">Close</button> -->
-    <!-- <button onclick="downloadGame()">Download</button> -->
-    <script src="./renderer.js"></script>
+      Chromium <span id="chrome-version"></span>,
+      and Electron <span id="electron-version"></span>. -->
+      
+      <!-- You can also require other files to run in this process -->
+      <!-- <button onclick="openGame()">Abrir juego</button> -->
+      <!-- <button id="closeApp">Close</button> -->
+      <!-- <button onclick="downloadGame()">Download</button> -->
+      <script src="./renderer.js"></script>
+      <script src="vendors/jquery.min.js" type="text/javascript"></script>
   </body>
 </html>

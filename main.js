@@ -2,6 +2,8 @@
 const {app, BrowserWindow, ipcMain, Menu} = require('electron')
 const path = require('path')
 
+app.commandLine.appendSwitch ("disable-http-cache");
+
 Menu.setApplicationMenu(null)
 
 ipcMain.on('close-me', (evt, arg) => {
@@ -12,7 +14,7 @@ function createWindow () {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 500,
-    height: 700,
+    height: 720,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true

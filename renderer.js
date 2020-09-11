@@ -5,40 +5,79 @@
 // selectively enable features needed in the rendering
 // process.
 
-// var AWS = require('aws-sdk');
-const ftp = require("basic-ftp")
-
 const {ipcRenderer, shell} = require('electron');
+const ftp = require("basic-ftp")
+const axios = require("axios"); 
+const toastr = require("toastr"); 
+
+
 const closeApp = document.getElementById('closeApp');
 closeApp.addEventListener('click', () => {
     ipcRenderer.send('close-me')
 });
 
+const {version} = require('./info.json')
+document.getElementById("version").innerHTML = "Version: "+version
+
+async function isOutdated(){
+    return new Promise(function (resolve, reject) { 
+        axios.get("http://legyonx.ubisuite.com/launcher/info.json")
+        .then((res) => {
+            console.log(res)
+            if(res.status == 200){
+                console.log(res.data.version);
+                if (res.data.version === version) {
+                    toastr.success('Versión: '+version, 'Tienes la última versión')
+                    resolve({"code":false,"version":version})
+                } else {
+                    toastr.warning('Versión disponible: '+res.data.version, 'Versión desactualizada')
+                    resolve({"code":true,"version":res.data.version})
+                } 
+            }else{
+                toastr.error('No pudimos verificar tu versión: HTTP-'+res.status, 'Error')
+                resolve({"code":false,"version":version})
+            } 
+        })
+        .catch((err) => { 
+            console.log(err);
+            toastr.error('No pudimos verificar tu versión: '+err, 'Error')
+            resolve({"code":false,"version":version})
+        });
+    })
+}
+
+updateGame();
+
 async function updateGame(){
-    document.getElementById("cover").style.display = "block";
-    const client = new ftp.Client()
-    client.ftp.verbose = false
-    try {
-        await client.access({
-            host: "legyonx.ubisuite.com",
-            user: "ftpuser",
-            password: "mdcftpuser",
-            secure: false
-        })
-        client.trackProgress(info => {
-            document.getElementById("file").innerHTML = info.name
-            document.getElementById("transferred").innerHTML = info.bytes / 1024 / 1024 + "MB"
-            document.getElementById("transferedOverAll").innerHTML = info.bytesOverall / 1024 / 1024 + "MB"
-        })
-        await client.downloadToDir(".", "files")
-        alert('Actualizado correctamente')
-    }
-    catch(err) {
-        console.log(err)
-        alert('Error al actualizar:', err)
-    }
-    client.close()
-    document.getElementById("cover").style.display = "none";
+    isOutdated().then(async function(result){
+        if(result.code){
+            document.getElementById("cover").style.display = "block";
+            const client = new ftp.Client()
+            client.ftp.verbose = false
+            try {
+                await client.access({
+                    host: "legyonx.ubisuite.com",
+                    user: "ftpuser",
+                    password: "mdcftpuser",
+                    secure: false
+                })
+                client.trackProgress(info => {
+                    document.getElementById("file").innerHTML = info.name
+                    document.getElementById("transferred").innerHTML = info.bytes / 1024 / 1024 + "MB"
+                    document.getElementById("transferedOverAll").innerHTML = info.bytesOverall / 1024 / 1024 + "MB"
+                })
+                await client.downloadToDir(".", "files")
+                document.getElementById("version").innerHTML = "Version: "+result.version
+                toastr.success('Versión: '+result.version, 'Actualización correcta')
+            }
+            catch(err) {
+                console.log(err)
+                toastr.error('No pudimos actualizar tu verisón: '+err, 'Error')
+            }
+            client.close()
+            document.getElementById("cover").style.display = "none";
+        }
+    });
 }
 
 
