@@ -5,9 +5,8 @@
 // selectively enable features needed in the rendering
 // process.
 
-var AWS = require('aws-sdk');
-var s3 = new AWS.S3();
-
+// var AWS = require('aws-sdk');
+const ftp = require("basic-ftp")
 
 const {ipcRenderer, shell} = require('electron');
 const closeApp = document.getElementById('closeApp');
@@ -15,18 +14,35 @@ closeApp.addEventListener('click', () => {
     ipcRenderer.send('close-me')
 });
 
-function updateGame(){
+async function updateGame(){
     document.getElementById("cover").style.display = "block";
-    document.getElementById("cover").style.display = "none";
-    aws.command('s3 sync s3://mdcygopro/game . --no-sign-request', function (err, data) {
-        if(err){
-            console.log(err)
-            alert('Error al actualizar, intenta nuevameente', JSON.stringify(err))
-        }else{
-            console.log('data = ', JSON.stringify(data.raw));
-            alert('Actualizado correctamente')
-        }
-    });
+    const client = new ftp.Client()
+    client.ftp.verbose = false
+    try {
+        await client.access({
+            host: "legyonx.ubisuite.com",
+            user: "ftpuser",
+            password: "mdcftpuser",
+            secure: false
+        })
+        client.trackProgress(info => {
+            // console.log("File", info.name)
+            // console.log("Type", info.type)
+            // console.log("Transferred", info.bytes)
+            // console.log("Transferred Overall", info.bytesOverall)
+            document.getElementById("file").innerHTML = info.name
+            document.getElementById("transferred").innerHTML = info.bytes
+            document.getElementById("transferedOverAll").innerHTML = info.bytesOverall
+        })
+        await client.downloadToDir(".", "files")
+        alert('Actualizado correctamente')
+    }
+    catch(err) {
+        console.log(err)
+        alert('Error al actualizar:', err)
+    }
+    client.close()
+    document.getElementById("cover").style.display = "block";
 }
 
 

@@ -16,6 +16,6 @@
     "electron": "^10.1.1"
   },
   "dependencies": {
-    "aws-sdk": "^2.750.0"
+    "basic-ftp": "^4.6.2"
   }
 }
