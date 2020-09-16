@@ -13,8 +13,7 @@ ipcMain.on('close-me', (evt, arg) => {
 function createWindow () {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    // width: 500,
-    width: 700,
+    width: 500,
     height: 720,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
