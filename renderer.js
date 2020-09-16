@@ -16,8 +16,8 @@ closeApp.addEventListener('click', () => {
     ipcRenderer.send('close-me')
 });
 
-const {version} = require('./info.json')
-document.getElementById("version").innerHTML = "Version: "+version
+const {version, versionCode, versionName} = require('./info.json')
+document.getElementById("version").innerHTML = "Version: "+version+ " ("+versionName+")"
 
 async function isOutdated(){
     return new Promise(function (resolve, reject) { 
@@ -26,12 +26,18 @@ async function isOutdated(){
             if(res.status == 200){
                 // console.log(version)
                 // console.log(res.data.version);
-                if (res.data.version === version) {
+                if (res.data.versionCode === versionCode) {
                     toastr.success('Versión: '+version, 'Tienes la última versión')
                     resolve({"code":false,"version":version})
                 } else {
+                    var response = {"code":true,"version":res.data}
+                    if((res.data.versionCode - versionCode) == 1){
+                        response.previous = true;
+                    }else{
+                        response.previous = false;
+                    }
                     toastr.warning('Versión disponible: '+res.data.version, 'Versión desactualizada')
-                    resolve({"code":true,"version":res.data.version})
+                    resolve(response)
                 } 
             }else{
                 toastr.error('No pudimos verificar tu versión: HTTP-'+res.status, 'Error')
@@ -66,9 +72,21 @@ async function updateGame(){
                     document.getElementById("transferred").innerHTML = info.bytes / 1024 / 1024 + "MB"
                     document.getElementById("transferedOverAll").innerHTML = info.bytesOverall / 1024 / 1024 + "MB"
                 })
-                await client.downloadToDir(".", "files")
-                document.getElementById("version").innerHTML = "Version: "+result.version
-                toastr.success('Versión: '+result.version, 'Actualización correcta')
+                if(result.previous){
+                    await client.downloadToDir(".", "updates/"+result.version.versionCode)
+                    document.getElementById("version").innerHTML = "Version: "+result.version.version+ " ("+result.version.versionName+")"
+                    toastr.success('Versión: '+result.version.version, 'Actualización correcta')
+                }else{
+                    for (let i = versionCode + 1; i < result.version.versionCode + 1; i++) {
+                        // console.log(i)
+                        // console.log(result.version.versionCode)
+                        await client.downloadToDir(".", "updates/"+i)
+                        if(result.version.versionCode === i) {
+                            document.getElementById("version").innerHTML = "Version: "+result.version.version+ " ("+result.version.versionName+")"
+                            toastr.success('Versión: '+result.version.version, 'Actualización correcta')
+                        }
+                      }
+                }
             }
             catch(err) {
                 console.log(err)
